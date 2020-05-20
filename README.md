@@ -1,2 +1,2 @@
 # generador-de-imagenes
-Generador de imágenes publicitarias
+Generador de imágenes publicitarias con Python
