@@ -7,6 +7,9 @@ from PIL import Image, ImageDraw, ImageFont
 import warnings
 warnings.filterwarnings("ignore")
 import textwrap
+from matplotlib.image import imsave, imread
+from sklearn.cluster import KMeans, DBSCAN
+from skimage import io
 
 # Defino la ruta de los archivos:
 ruta = "C:\\Users\\gperetti\\OneDrive - Embotelladora Andina\\Data Mining\\7. Imágenes - MiCC\\1. Generador de imágenes\\2. Combo Store\\Combo Store 2020\\"
@@ -211,6 +214,22 @@ for i in df_combos["9mil"]:
     
     # Guardo las imágenes
     imagenes[i].save(ruta + "Imágenes surtido\\" + str(i) + ".png")
+    
+    # KMeans Clustering 
+    img = io.imread(ruta + "Imágenes surtido\\" + str(i) + ".png")
+    img_size = img.shape
+    k = 30
+    
+    X = img.reshape(img_size[0] * img_size[1], img_size[2])
+    
+    km = KMeans(n_clusters = k)
+    km.fit(X)
+
+    X_compressed = km.cluster_centers_[km.labels_]
+    X_compressed = np.clip(X_compressed.astype('uint8'), 0, 255)
+    X_compressed = X_compressed.reshape(img_size[0], img_size[1], img_size[2])
+    
+    io.imsave(ruta + "Imágenes surtido\\" + str(i) + ".png", X_compressed)
 
 print("Listo!")
 
